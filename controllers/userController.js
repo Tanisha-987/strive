@@ -1,5 +1,7 @@
 const TempModel = require("../models/TempModel");
 const OtpModel = require("../models/OtpModel");
+const Seeker = require("../models/JobSeekerModel");
+const Provider = require("../models/JobProviderModel");
 const sendMail = require("../config/nodemailer")
 
 exports.Signup = async (req, res) => {
@@ -7,8 +9,12 @@ exports.Signup = async (req, res) => {
     const { fullname,companyname, email, phone,role , hiring  } = req.body;
     const resume = req.file.path 
 
-    const existingUser = await TempModel.findOne({ email });
-    if (existingUser) {
+    const existingSeeker = await Seeker.findOne({ email });
+    if (existingSeeker) {
+      return res.status(400).json({ success: false, message: "User already exists" });
+    }
+    const existingProvider = await Provider.findOne({ email });
+    if (existingProvider) {
       return res.status(400).json({ success: false, message: "User already exists" });
     }
 
